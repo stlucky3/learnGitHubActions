@@ -1,8 +1,27 @@
 name: hello-world
 on: push
 jobs:
-  my-job:
+  build:
     runs-on: self-hosted
+
+    strategy:
+      matrix:
+        python-version: [3.8]
+
     steps:
-      - name: my-step
-        run: echo "Hi Shailesh Hello!"
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+
+    - name: Run tests
+      run: |
+        cd src
+        python -m pytest addition.py
+        
